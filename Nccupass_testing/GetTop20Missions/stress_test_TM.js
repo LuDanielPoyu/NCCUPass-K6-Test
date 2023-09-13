@@ -9,13 +9,9 @@ const url_get20missions =
 
 export const options = {
   stages: [
-    // { duration: '0.017m', target: 4 },
-    // { duration: '0.5m', target: 4 },
-    // { duration: '1m', target: 0 },
-    { duration: "1m", target: 10 }, // 1 minute at 10 VUs
-    { duration: "5m", target: 50 }, // 5 minutes at 50 VUs
-    { duration: "10m", target: 100 }, // 10 minutes at 100 VUs
-    { duration: "5m", target: 0 }, // 5 minutes at 0 VUs (ramp down)
+    { duration: "10m", target: 100 }, // 5 minutes at 50 VUs
+    { duration: "30m", target: 100 }, // 10 minutes at 100 VUs
+    { duration: "10m", target: 0 }, // 5 minutes at 0 VUs (ramp down)
   ],
 };
 
