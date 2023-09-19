@@ -2,20 +2,26 @@ import http from "k6/http";
 import { sleep, check, group } from "k6";
 import { FormData } from "https://jslib.k6.io/formdata/0.0.2/index.js";
 const token =
-  "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6IjExMDMwNjAxOUBuY2N1LmVkdS50dyIsIlJvbGUiOiJOQ0NVU3R1ZGVudCIsIlVzZXJJZCI6IjY0Y2QxYTE0NjEwMjgzNjYzNjRlM2YxMiIsImV4cCI6MTcyNjAxNzQwMCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NzI0MyIsImF1ZCI6ImZyb250LWVuZC11cmwifQ.Y9dgSV07T4ow_m9TzKHJPswgBLTo8DOAEP4CsRDh2os";
-const url = "https://localhost:7243/nccupass/NormalTask/create";
+  "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL25jY3VwYXNzLmNvbSIsImlhdCI6MTY5MzAzMjMwOSwiZXhwIjoxNzI0NTY4MzA5LCJhdWQiOiJmcm9udC1lbmQtdXJsIiwic3ViIjoibmNjdXBhc3MiLCJVc2VySWQiOiI2NGNkMWExNDYxMDI4MzY2MzY0ZTNmMTIiLCJFbWFpbCI6IjExMDMwNjAxOUBuY2N1LmVkdS50dyIsIlJvbGUiOiJOQ0NVU3R1ZGVudCJ9.9E0tsk36u1Sfh31GUe3JXm9yyOCIqnHBVNyn_VIe1_0";
+const url = "https://api.nccupass.com/nccupass/NormalTask/create";
 const url2 =
-  "https://localhost:7243/nccupass/Task/hashtag-search/%23stress/1/0";
+  "https://api.nccupass.com/nccupass/Task/hashtag-search/%23stress/1/0";
 
-const img = open("../img/order.png");
+const img = open("img/order.png");
 
 export const options = {
-  stages: [
-    { duration: "5m", target: 200 }, // traffic ramp-up from 1 to 100 users over 5 minutes.
-    { duration: "8h", target: 200 }, // stay at 100 users for 8 hours!!!
-    // { duration: '1.6h', target: 100 }, // stay at 100 users for 8 hours!!!
-    { duration: "5m", target: 0 }, // ramp-down to 0 users
-  ],
+  scenarios: {
+    contacts: {
+      executor: "ramping-vus",
+      startVUs: 0,
+      stages: [
+        { duration: "10m", target: 100 },
+        { duration: "5h", target: 0 },
+        { duration: "10m", target: 0 },
+      ],
+      gracefulRampDown: "30s",
+    },
+  },
 };
 
 export default function () {
@@ -62,13 +68,18 @@ export default function () {
 
   group("create and search and get detail", function () {
     const res = http.post(url, fd.body(), params);
-    check(res, { "status of create was 200": (r) => r.status == 200 });
+    sleep(1);
+
     const res2 = http.get(url2, params2);
-    check(res2, { "status of search was 200": (r) => r.status == 200 });
+    sleep(1);
     const taskId = res2.body.substring(92, 116);
-    const url3 = "https://localhost:7243/nccupass/Task/" + taskId;
+    const url3 = "https://api.nccupass.com/nccupass/Task/" + taskId;
+
     const res3 = http.get(url3, params2);
+    sleep(1);
+
+    check(res, { "status of create was 200": (r) => r.status == 200 });
+    check(res2, { "status of search was 200": (r) => r.status == 200 });
     check(res3, { "status of get detail was 200": (r) => r.status == 200 });
   });
-  sleep(1);
 }
