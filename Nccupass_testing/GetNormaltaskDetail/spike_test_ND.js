@@ -40,7 +40,15 @@ export default function () {
     sleep(1);
     const res3 = http.get(url3, params);
     sleep(1);
-
+    if (res1.status != 200) {
+      console.log("First test didn't pass, code: " + res1.status);
+    }
+    if (res2.status != 200) {
+      console.log("Second test didn't pass, code: " + res1.status);
+    }
+    if (res3.status != 200) {
+      console.log("Third test didn't pass, code: " + res1.status);
+    }
     check(res1, { "status of first task was 200": (r) => r.status == 200 });
     check(res2, { "status of second task was 200": (r) => r.status == 200 });
     check(res3, { "status of third task was 200": (r) => r.status == 200 });

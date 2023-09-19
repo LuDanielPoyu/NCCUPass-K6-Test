@@ -26,15 +26,21 @@ export default function () {
     },
   };
   group("get 1 with keyword then get first detail", function () {
-    const res = http.get(url, params);
+    const res1 = http.get(url, params);
     sleep(1);
-    const taskId = res.body.substring(87, 111);
+    const taskId = res1.body.substring(87, 111);
     const url2 = "https://api.nccupass.com/nccupass/Task/" + taskId;
 
     const res2 = http.get(url2, params);
     sleep(1);
-
-    check(res, { "status of task was 200": (r) => r.status == 200 });
-    check(res2, { "status of detail was 200": (r) => r.status == 200 });
+    if (res1.status != 200) {
+      console.log("First test didn't pass, code: " + res1.status);
+      console.log(res1.body);
+    }
+    if (res2.status != 200) {
+      console.log("Second test didn't pass, code: " + res1.status);
+    }
+    check(res1, { "status of search was 200": (r) => r.status == 200 });
+    check(res2, { "status of get detail was 200": (r) => r.status == 200 });
   });
 }

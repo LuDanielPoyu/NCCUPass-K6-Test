@@ -31,5 +31,8 @@ export default function () {
   };
   const res = http.get(url_get20missions, params);
   check(res, { "status was 200": (r) => r.status == 200 });
+  if (res.status != 200) {
+    console.log(res.body);
+  }
   sleep(1);
 }
