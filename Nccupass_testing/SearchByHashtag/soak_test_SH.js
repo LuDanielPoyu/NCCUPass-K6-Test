@@ -4,8 +4,7 @@ import { check } from "k6";
 
 const token =
   "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL25jY3VwYXNzLmNvbSIsImlhdCI6MTY5MzAzMjMwOSwiZXhwIjoxNzI0NTY4MzA5LCJhdWQiOiJmcm9udC1lbmQtdXJsIiwic3ViIjoibmNjdXBhc3MiLCJVc2VySWQiOiI2NGNkMWExNDYxMDI4MzY2MzY0ZTNmMTIiLCJFbWFpbCI6IjExMDMwNjAxOUBuY2N1LmVkdS50dyIsIlJvbGUiOiJOQ0NVU3R1ZGVudCJ9.9E0tsk36u1Sfh31GUe3JXm9yyOCIqnHBVNyn_VIe1_0";
-const url_get20missions =
-  "https://api.nccupass.com/nccupass/NormalTask/mainPage/20/0";
+const url = "https://api.nccupass.com/nccupass/Task/hashtag-search/%23test/1/0";
 
 export const options = {
   scenarios: {
@@ -29,7 +28,7 @@ export default function () {
       Authorization: token,
     },
   };
-  const res = http.get(url_get20missions, params);
+  const res = http.get(url, params);
   check(res, { "status was 200": (r) => r.status == 200 });
   sleep(1);
 }
