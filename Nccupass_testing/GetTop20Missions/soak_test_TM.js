@@ -14,7 +14,7 @@ export const options = {
       startVUs: 0,
       stages: [
         { duration: "10m", target: 100 },
-        { duration: "8h", target: 0 },
+        { duration: "8h", target: 100 },
         { duration: "10m", target: 0 },
       ],
       gracefulRampDown: "30s",
@@ -30,6 +30,9 @@ export default function () {
     },
   };
   const res = http.get(url_get20missions, params);
+  if (res.status != 200) {
+    console.log("test didn't pass, code: " + res.status);
+  }
   check(res, { "status was 200": (r) => r.status == 200 });
   sleep(1);
 }
